@@ -32,7 +32,7 @@ class HomeRepository @Inject constructor() {
 
     suspend fun getVehiclesByCity(city: String): List<Vehicle> {
         // Fetch vehicles and filter by city
-        return db.collection("vehicles")
+        return db.collection("vehicle")
             .whereEqualTo("city", city)
             .get()
             .await()

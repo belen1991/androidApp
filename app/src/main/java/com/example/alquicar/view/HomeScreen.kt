@@ -23,30 +23,44 @@ import androidx.compose.material.Button
 import androidx.compose.ui.platform.LocalContext
 import android.app.DatePickerDialog
 import android.content.Context
+import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberImagePainter
 import java.util.*
-
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material.ripple.rememberRipple
+import com.google.firebase.firestore.GeoPoint
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val cities = viewModel.cities.value
     val vehicles = viewModel.vehicles.value
     val reservationDates = viewModel.reservationDates
+
+    // Estado para mantener la ciudad seleccionada
+    val selectedCity = remember { mutableStateOf("Todas") }  // Inicialmente "Todas"
 
     Column (
         modifier = Modifier
@@ -55,35 +69,68 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
         verticalArrangement = Arrangement.spacedBy(16.dp), // Espacia uniformemente todos los componentes verticales
         horizontalAlignment = Alignment.Start
     ) {
-        DropdownMenuCities(cities)
+        DropdownMenuCities(cities, selectedCity, viewModel)
         DatePickers(reservationDates)
-        VehicleList(vehicles)
+        VehicleList(if (selectedCity.value == "Todas") vehicles else vehicles.filter { it.city == selectedCity.value })
     }
 }
 
 @Composable
-fun DropdownMenuCities(cities: List<City>) {
+fun DropdownMenuCities(cities: List<City>, selectedCity: MutableState<String>, viewModel: HomeViewModel) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedCity by remember { mutableStateOf("") }
+    val openDialog = remember { mutableStateOf(false) }
+    val currentCityGeoPoint = remember { mutableStateOf<GeoPoint?>(null) }
 
-    Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.CenterStart) {
+    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
         Text(
-            text = if (selectedCity.isEmpty()) "Select a city:" else selectedCity,
+            text = "Seleccione una ciudad:",
+            style = TextStyle(color = Color.Black, fontSize = 16.sp),
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = { expanded = true }) // Esto permite que el texto actúe como un botón desplegable
-                .padding(8.dp)
-        )
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
+                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+                .clickable(onClick = { expanded = !expanded }),
+            contentAlignment = Alignment.CenterStart
         ) {
-            cities.forEach { city ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = { expanded = !expanded })
+                    .padding(8.dp)
+                    .background(if (expanded) Color.LightGray else Color.Transparent),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = selectedCity.value,
+                    style = TextStyle(color = Color.Black, fontSize = 16.sp),
+                    modifier = Modifier.weight(1f)
+                )
+                Icon(
+                    imageVector = Icons.Filled.ArrowDropDown,
+                    contentDescription = "Dropdown"
+                )
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
                 DropdownMenuItem(onClick = {
-                    selectedCity = city.name
+                    selectedCity.value = "Todas"
                     expanded = false
+                    viewModel.loadVehicles()  // Carga todos los vehículos sin filtro
                 }) {
-                    Text(text = city.name)
+                    Text(text = "Todas")
+                }
+                cities.forEach { city ->
+                    DropdownMenuItem(onClick = {
+                        selectedCity.value = city.name
+                        expanded = false
+                        viewModel.getVehiclesByCity(city.name)  // Actualiza los vehículos al seleccionar una ciudad específica
+                    }) {
+                        Text(text = city.name)
+                    }
                 }
             }
         }
@@ -138,8 +185,8 @@ fun DatePickers(reservationDates: MutableState<ReservationDates>) {
             .size(16.dp))
         Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly)
         {
-            Text("Start Date: ${java.text.SimpleDateFormat("dd/MM/yyyy").format(reservationDates.value.startDate)}", fontSize = 16.sp)
-            Text("End Date: ${java.text.SimpleDateFormat("dd/MM/yyyy").format(reservationDates.value.endDate)}", fontSize = 16.sp)
+            Text(java.text.SimpleDateFormat("dd/MM/yyyy").format(reservationDates.value.startDate), fontSize = 16.sp)
+            Text(java.text.SimpleDateFormat("dd/MM/yyyy").format(reservationDates.value.endDate), fontSize = 16.sp)
         }
     }
 }
@@ -170,9 +217,36 @@ fun showDatePicker(context: Context, isStart: Boolean, reservationDates: Mutable
 fun VehicleList(vehicles: List<Vehicle>) {
     LazyColumn {
         items(vehicles) { vehicle ->
-            Text(text = "Car: ${vehicle.brand} ${vehicle.model}",
+            Row(
                 modifier = Modifier
-                    .padding(16.dp))
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f) // Ocupa el espacio restante
+                        .padding(end = 16.dp) // Espacio entre el texto y la imagen
+                ) {
+                    Text(text = "Vehículo: ${vehicle.brand} ${vehicle.model}")
+                    Text(text = "Color: ${vehicle.color}")
+                    Text(text = "Kilometraje: ${vehicle.mileage}")
+                    Text(text = "Año: ${vehicle.year}")
+                    Text(text = "Ciudad: ${vehicle.city}")
+                }
+                Image(
+                    painter = rememberImagePainter(
+                        data = vehicle.imageUrl,
+                        builder = {
+                            crossfade(true)
+                        }
+                    ),
+                    contentDescription = "Imagen del vehículo",
+                    modifier = Modifier
+                        .size(100.dp), // Tamaño de la imagen
+                    contentScale = ContentScale.Crop
+                )
+            }
             Divider()
         }
     }

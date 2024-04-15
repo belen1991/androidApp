@@ -29,15 +29,25 @@ class HomeViewModel @Inject constructor(
         loadVehicles()
     }
 
-    private fun loadCities() {
+    fun loadCities() {
         viewModelScope.launch {
             _cities.value = homeRepository.getAllCities()
         }
     }
 
-    private fun loadVehicles() {
+    fun loadVehicles() {
         viewModelScope.launch {
             _vehicles.value = homeRepository.getVehicles()
+        }
+    }
+
+    fun getVehiclesByCity(cityName: String) {
+        viewModelScope.launch {
+            if (cityName == "Todas") {
+                _vehicles.value = homeRepository.getVehicles()
+            } else {
+                _vehicles.value = homeRepository.getVehiclesByCity(cityName)
+            }
         }
     }
 }
