@@ -1,4 +1,4 @@
-package com.example.alquicar.viewmodels
+package com.example.alquicar.viewmodel
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel

@@ -55,7 +55,7 @@ fun LoginScreen(navController: NavController, firebaseAuth: FirebaseAuth = Fireb
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         // Navigate to the next screen or show success
-                        navController.navigate("vehicleListScreen")
+                        navController.navigate("navigation")
                     } else {
                         message = "Login failed: ${task.exception?.message}"
                         // Show error message

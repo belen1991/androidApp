@@ -1,6 +1,6 @@
 package com.example.alquicar.view
 
-import android.content.Context
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,15 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.alquicar.data.Vehicle
-import com.example.alquicar.viewmodels.VehicleViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.alquicar.model.Vehicle
+import com.example.alquicar.viewmodel.VehicleViewModel
 import com.google.android.gms.maps.model.LatLng
 
 @Composable
 fun VehicleItem(vehicle: Vehicle) {
     Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
-        Text(text = "Make: ${vehicle.make}", style = MaterialTheme.typography.body1)
+        Text(text = "Make: ${vehicle.brand}", style = MaterialTheme.typography.body1)
         Text(text = "Model: ${vehicle.model}", style = MaterialTheme.typography.body2)
         Text(text = "Year: ${vehicle.year}", style = MaterialTheme.typography.body2)
         Text(text = "City: ${vehicle.city}", style = MaterialTheme.typography.body2)
@@ -29,7 +29,8 @@ fun VehicleItem(vehicle: Vehicle) {
 }
 
 @Composable
-fun VehicleListScreen(vehicleViewModel: VehicleViewModel = viewModel()) {
+fun VehicleListScreen(vehicleViewModel: VehicleViewModel = hiltViewModel()) {
+
     var selectedLocation by remember { mutableStateOf<LatLng?>(null) }
     val context = LocalContext.current
     var city by remember { mutableStateOf("DefaultCity") }

@@ -10,15 +10,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.Navigation
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.alquicar.ui.theme.AlquicarTheme
 import com.example.alquicar.view.LoginScreen
+import com.example.alquicar.view.MainScreen
 import com.example.alquicar.view.RegisterScreen
 import com.example.alquicar.view.VehicleListScreen
-import com.example.alquicar.viewmodels.Splash
+import com.example.alquicar.viewmodel.Splash
+import com.google.android.material.navigation.NavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val splash : Splash by viewModels<Splash>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +60,8 @@ fun MyApp() {
             LoginScreen(navController) }
         composable("register") {
             RegisterScreen(navController) }
-        composable("vehicleListScreen") {
-            VehicleListScreen() }
+        composable("navigation") {
+            MainScreen()
+        }
     }
 }

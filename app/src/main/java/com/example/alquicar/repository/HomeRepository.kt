@@ -1,12 +1,24 @@
-package com.example.alquicar.utils
+package com.example.alquicar.repository
 
-import com.example.alquicar.data.Vehicle
+import com.example.alquicar.model.City
+import com.example.alquicar.model.Vehicle
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class VehicleRepository {
+class HomeRepository @Inject constructor() {
     private val db = FirebaseFirestore.getInstance()
-    private val vehicleCollection = db.collection("vehicles")
+    private val vehicleCollection = db.collection("vehicle")
+    private val cityCollection = db.collection("city")
+    suspend fun getAllCities(): List<City> {
+        return try {
+            cityCollection.get().await().documents.map { document ->
+                document.toObject(City::class.java)!!
+            }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
 
     suspend fun getVehicles(): List<Vehicle> {
         return try {
