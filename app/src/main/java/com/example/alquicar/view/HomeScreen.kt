@@ -35,8 +35,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import java.util.*
 
 
@@ -47,8 +49,10 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val reservationDates = viewModel.reservationDates
 
     Column (
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp), // Añade padding general para todo el Column
+        verticalArrangement = Arrangement.spacedBy(16.dp), // Espacia uniformemente todos los componentes verticales
         horizontalAlignment = Alignment.Start
     ) {
         DropdownMenuCities(cities)
@@ -109,12 +113,11 @@ fun DatePickers(reservationDates: MutableState<ReservationDates>) {
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
+            .padding(vertical = 16.dp) // Añade padding vertical para separar este bloque de otros
     ) {
-        Row (horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)) {
+        Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly)
+        {
             Button(onClick = {
                 showDatePicker(context, true, reservationDates)
             }) {
@@ -133,10 +136,8 @@ fun DatePickers(reservationDates: MutableState<ReservationDates>) {
         }
         Spacer(modifier = Modifier
             .size(16.dp))
-        Row (horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)) {
+        Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly)
+        {
             Text("Start Date: ${java.text.SimpleDateFormat("dd/MM/yyyy").format(reservationDates.value.startDate)}", fontSize = 16.sp)
             Text("End Date: ${java.text.SimpleDateFormat("dd/MM/yyyy").format(reservationDates.value.endDate)}", fontSize = 16.sp)
         }
