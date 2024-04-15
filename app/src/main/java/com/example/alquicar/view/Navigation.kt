@@ -40,12 +40,13 @@ fun HomeScreen(navController: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
     ) {
+        HomeScreen()
         //AssetsList(navHostController = navController)
     }
 }
 
 @Composable
-fun FavouritesScreen() {
+fun BookingsScreen() {
     var text by rememberSaveable { mutableStateOf("Hello") }
     Column(
         verticalArrangement = Arrangement.Center,
@@ -55,6 +56,22 @@ fun FavouritesScreen() {
     ) {
         Text("$text Favourites Screen")
         Button(onClick = { text = "Bye" }) {
+            Text("Change text")
+        }
+    }
+}
+
+@Composable
+fun MessagesScreen() {
+    var text by rememberSaveable { mutableStateOf("Messages") }
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Text("$text Messages Screen")
+        Button(onClick = { text = "Bye Message" }) {
             Text("Change text")
         }
     }
@@ -101,7 +118,8 @@ fun NavigationGraph(navController: NavHostController) {
     val assetIdKey = "assetId"
     NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
         composable(BottomNavItem.Home.route) { HomeScreen(navController) }
-        composable(BottomNavItem.Favourites.route) { FavouritesScreen() }
+        composable(BottomNavItem.Bookings.route) { BookingsScreen() }
+        composable(BottomNavItem.Messages.route) { MessagesScreen() }
         composable(BottomNavItem.Profile.route) { ProfileScreen() }
         composable("${BottomNavItem.Home.route}/{$assetIdKey}") {backStackEntry ->
             DetailScreen(
@@ -127,7 +145,8 @@ fun MainScreen() {
 fun BottomTabBar(navController: NavHostController) {
     val tabBarItems = listOf(
         BottomNavItem.Home,
-        BottomNavItem.Favourites,
+        BottomNavItem.Bookings,
+        BottomNavItem.Messages,
         BottomNavItem.Profile
     )
 

@@ -7,7 +7,7 @@ import java.util.Locale
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.alquicar.model.Vehicle
-import com.example.alquicar.data.VehicleRepository
+import com.example.alquicar.repository.VehicleRepository
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

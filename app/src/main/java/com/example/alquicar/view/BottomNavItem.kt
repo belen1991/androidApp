@@ -2,10 +2,12 @@ package com.example.alquicar.view
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.material.icons.outlined.Person
@@ -25,11 +27,18 @@ sealed class BottomNavItem(
         title = "Home"
     )
 
-    data object Favourites: BottomNavItem(
-        route = "favourites",
+    data object Bookings: BottomNavItem(
+        route = "bookings",
         unselectedIcon = Icons.Outlined.List,
         selectedIcon = Icons.Filled.List,
         title = "Reservas"
+    )
+
+    data object Messages: BottomNavItem(
+        route = "messages",
+        unselectedIcon = Icons.Outlined.Email,
+        selectedIcon = Icons.Filled.Email,
+        title = "Mensajes"
     )
 
     data object Profile: BottomNavItem(

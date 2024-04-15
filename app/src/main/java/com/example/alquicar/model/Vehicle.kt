@@ -8,5 +8,6 @@ data class Vehicle(
     val city: String = "",
     val color: String = "",
     val mileage: Int = 0,
-    val doors: Int = 0
+    val doors: Int = 0,
+    val imageUrl: String =""
 )
