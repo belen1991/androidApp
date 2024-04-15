@@ -1,8 +1,8 @@
-package com.example.alquicar.data
+package com.example.alquicar.model
 
 data class Vehicle(
     val id: String = "",
-    val make: String = "",
+    val brand: String = "",
     val model: String = "",
     val year: Int = 0,
     val city: String = "",

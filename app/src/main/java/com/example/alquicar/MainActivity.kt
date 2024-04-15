@@ -17,8 +17,10 @@ import com.example.alquicar.ui.theme.AlquicarTheme
 import com.example.alquicar.view.LoginScreen
 import com.example.alquicar.view.RegisterScreen
 import com.example.alquicar.view.VehicleListScreen
-import com.example.alquicar.viewmodels.Splash
+import com.example.alquicar.viewmodel.Splash
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val splash : Splash by viewModels<Splash>()
     override fun onCreate(savedInstanceState: Bundle?) {

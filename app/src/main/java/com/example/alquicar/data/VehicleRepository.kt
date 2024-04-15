@@ -1,10 +1,12 @@
-package com.example.alquicar.utils
+package com.example.alquicar.data
 
-import com.example.alquicar.data.Vehicle
+import com.example.alquicar.model.Vehicle
+import com.example.alquicar.service.VehicleService
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class VehicleRepository {
+class VehicleRepository @Inject constructor() {
     private val db = FirebaseFirestore.getInstance()
     private val vehicleCollection = db.collection("vehicles")
 

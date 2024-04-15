@@ -72,6 +72,7 @@ fun RegisterScreen(navController: NavController, firebaseAuth: FirebaseAuth = Fi
 
         Button(onClick = {
             if (password == confirmPassword) {
+
                 firebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
