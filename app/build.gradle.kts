@@ -89,6 +89,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime:1.1.0")
     implementation("androidx.compose.material:material:1.1.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.0")
+    implementation("io.coil-kt:coil-compose:2.6.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
