@@ -1,5 +1,6 @@
 package com.example.alquicar.view
 
+import UserProfileScreen
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -54,10 +55,7 @@ fun BookingsScreen() {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Text("$text Favourites Screen")
-        Button(onClick = { text = "Bye" }) {
-            Text("Change text")
-        }
+        ReservationScreen()
     }
 }
 
@@ -84,7 +82,7 @@ fun ProfileScreen() {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Text("Profile Screen")
+        UserProfileScreen()
     }
 }
 

@@ -10,7 +10,7 @@ data class Vehicle(
     val mileage: Int = 0,
     val doors: Int = 0,
     val imageUrl: String ="",
-    val ubicacion: GeoPoint  // GeoPoint to store latitude and longitude
+    val location: GeoPoint  // GeoPoint to store latitude and longitude
 )
 
 data class GeoPoint(
